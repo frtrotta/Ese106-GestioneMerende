@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Ordine {
 	private String codice;
-	private Vector<Articolo> articoli;
+	private Vector<ElementoOrdine> elementiOrdine;
 	private Classe classe;
 	
 	public Ordine(String codice) {
@@ -13,7 +13,7 @@ public class Ordine {
 		else
 			throw new IllegalArgumentException("codice cannot be null");
 		
-		articoli = new Vector<Articolo>();
+		elementiOrdine = new Vector<ElementoOrdine>();
 	}
 
 	public Classe getClasse() {
@@ -31,31 +31,56 @@ public class Ordine {
 		return codice;
 	}
 
-	public Vector<Articolo> getArticoli() {
-		return articoli;
+	public Vector<ElementoOrdine> getElementiOrdine() {
+		return elementiOrdine;
 	}
 	
-	public void addArticolo(Articolo a) {
-		if(a != null)
-			articoli.add(a);
-		else
+	/***
+	 * Adds the specified Articolo to the Ordine.
+	 * In case Articolo is present in the Ordine, quantita is incremented.
+	 * @param a
+	 * @param quantita
+	 */
+	public void addArticolo(Articolo a, int quantita) {
+		if(a == null)
 			throw new IllegalArgumentException("a cannot be null");
+		if(quantita <= 0)
+			throw new IllegalArgumentException("quantita must be positive");
+		
+		ElementoOrdine newEO = new ElementoOrdine(a, this, quantita);
+		ElementoOrdine foundEO = null;
+		
+		for (ElementoOrdine eo : elementiOrdine) {
+			if (eo.getArticolo().equals(newEO.getArticolo())) {
+				foundEO = eo;
+				// break;
+			}
+		}
+		
+		if (foundEO == null) {
+			// Articolo does not exists in elementiOrdine
+			elementiOrdine.addElement(newEO);
+			newEO.getArticolo().addElementoOrdine(newEO);
+		}
+		else {
+			// Articolo already exists in elementiOrdine
+			foundEO.increaseQuantitaBy(newEO.getQuantita());
+		}
 	}
 	
 	public int getNumeroArticoli() {
-		return articoli.size();
+		int r = 0;
+		for (ElementoOrdine eo : elementiOrdine) {
+			r += eo.getQuantita();
+		}
+		return r;
 	}
 	
 	public double getCostoTotale() {
 		double r = 0;
-		for(Articolo a: articoli)
-			r += a.getCostoUnitario();
+		for(ElementoOrdine eo : elementiOrdine) {
+			r += eo.getCostoTotale();
+		}
 		return r;
-	}
-
-	@Override
-	public String toString() {
-		return "Ordine [codice=" + codice + ", numeroArticoli=" + articoli.size()
-				+ ", classe=" + classe + "]";
 	}
 }

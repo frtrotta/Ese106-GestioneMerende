@@ -9,16 +9,24 @@ public class Ese106 {
 		Classe quartaAINF = new Classe("4ainf");
 		volta.addClasse(quartaAINF);
 		
+		Bibita cocaCola = new Bibita("coca30cl", "Coca-Cola", 1.5, 40, 30);
+		
 		Ordine primo = new Ordine("4ainf-20150429");
-		primo.addArticolo(new Bibita("coca30cl", "Coca-Cola", 1.5, 40, 30));
-		primo.addArticolo(new Bibita("coca30cl", "Coca-Cola", 1.5, 40, 30));
+		primo.addArticolo(cocaCola, 1);
 		System.out.print("Test01a..");
+		if(primo.getNumeroArticoli() == 1)
+			System.out.println("OK");
+		else
+			System.out.println("ERRORE");
+
+		primo.addArticolo(cocaCola, 1);
+		System.out.print("Test01b..");
 		if(primo.getNumeroArticoli() == 2)
 			System.out.println("OK");
 		else
 			System.out.println("ERRORE");
 		
-		System.out.print("Test01b..");
+		System.out.print("Test01c..");
 		if(primo.getCostoTotale() == 3.0)
 			System.out.println("OK");
 		else
@@ -39,7 +47,7 @@ public class Ese106 {
 		
 		System.out.print("Test03...");
 		try {
-			primo.addArticolo(cotoletta);
+			primo.addArticolo(cotoletta, 13);
 			throw new Exception("Eccezione non lanciata");
 		}
 		catch(Exception e) {
@@ -57,18 +65,24 @@ public class Ese106 {
 			System.out.println("ERRORE");
 		
 		Ordine secondo =  new Ordine("4ainf-20150430");
-		secondo.addArticolo(new Panino("cotoletta", "Panino alla cotoletta con kectchup e maionese", 2.5, 100, false, false));
-		secondo.addArticolo(new Panino("cotoletta", "Panino alla cotoletta con kectchup e maionese", 2.5, 100, false, false));
+		secondo.addArticolo(cocaCola, 3);
 		quartaAINF.addOrdine(secondo);
-		System.out.print("Test05...");
+		System.out.print("Test05a..");
 		if(secondo.getClasse() == quartaAINF)
+			System.out.println("OK");
+		else
+			System.out.println("ERROR");
+		
+		System.out.print("Test05b..");
+		if(cocaCola.getTotaleOrdini() == 5)
 			System.out.println("OK");
 		else
 			System.out.println("ERROR");
 		
 		System.out.print("Test06...");
 		secondo =  new Ordine("4ainf-20150430");
-		secondo.addArticolo(new Schifezza("patatine-rustiche", "Patatine molto molto grasse", 1, 200));
+		Schifezza patatine = new Schifezza("patatine-rustiche", "Patatine molto molto grasse", 1, 200);
+		secondo.addArticolo(patatine, 3);
 		try {
 			quartaAINF.addOrdine(secondo);
 			throw new Exception("Eccezione non lanciata");
